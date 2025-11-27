@@ -1,5 +1,5 @@
-import Project from "./Project";
-import Todo from "./Todo";
+import Project from "./Project.js";
+import Todo from "./Todo.js";
 
 let projects = [];
 let currentProjectId = null;
@@ -31,6 +31,7 @@ export function createNewProject(title) {
     projects.push(newProject);
     currentProjectId = newProject.id;
     console.log(`project ${newProject.title} created`);
+    //保存数据。。
     return newProject;
 }
 

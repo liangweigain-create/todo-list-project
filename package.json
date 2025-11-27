@@ -29,5 +29,6 @@
   },
   "dependencies": {
     "date-fns": "^4.1.0"
-  }
+  },
+  "tyle": "module"
 }

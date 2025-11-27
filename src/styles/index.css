@@ -106,7 +106,8 @@ body {
     border-bottom: solid 3px transparent;
     color: var(--clr-primary);
 }
-.active-project:hover {
+.active-project:hover,
+.active-project:focus {
     cursor: pointer;
     transition: transform 0.3s ease-in-out;
     transform: translate(-1px, 0px) scale(1.01);
