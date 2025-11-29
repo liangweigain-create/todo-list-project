@@ -181,9 +181,15 @@ body {
     border: 1px solid var(--clr-border);
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    transition: transform 0.1s;
+    transition: 
+        transform 0.3s ease-in-out,
+        opacity 0.3s ease-in-out,
+        text-decoration 0.3s ease-in-out;
+    transform-origin: center;
     /* Left border color changes based on priority via JS */
     border-left: 5px solid transparent; 
+    position: relative;
+    overflow: hidden;
 }
 
 .todo-card:hover {
@@ -198,6 +204,28 @@ body {
 .todo-card.completed {
     opacity: 0.5;
     text-decoration: line-through;
+    transform: translateX(-5px);
+}
+.todo-card.completed .todo-title::after {
+    content: '';
+    position: absolute;
+    top: 50%; /* 垂直居中 */
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--clr-text-muted);
+    transform-origin: left center; /* 从左侧开始动画 */
+    animation: strikeThrough 0.8s ease-in-out forwards;
+}
+
+/* 定义删除线动画 */
+@keyframes strikeThrough {
+    0% {
+        transform: scaleX(0); /* 初始宽度为0 */
+    }
+    100% {
+        transform: scaleX(1); /* 最终宽度为100% */
+    }
 }
 
 /* Spacer pushes the delete button to the right */
@@ -205,7 +233,7 @@ body {
     flex: 1;
     margin-left: var(--spacing-md);
     display: grid;
-    grid-template-columns: 80px 4fr;
+    grid-template-columns: 100px 4fr;
     grid-template-rows: 1fr 1fr;
     grid-template-areas: 
         "title title"

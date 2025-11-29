@@ -1,7 +1,7 @@
 import "./styles/index.css";
 import * as domInterface from "./modules/domInterface.js";
 import * as appLogic from "./modules/appLogic.js";
-import { add } from "date-fns";
+import { isValid, parseISO, format, addDays, isBefore } from 'date-fns';
 
 appLogic.init();
 domInterface.renderProjectList();
@@ -20,7 +20,7 @@ sidebar.addEventListener('click', (e) => {
     const clickedBtn = e.target;
     if (clickedBtn.tagName !== 'LI') return;
     const currentProject = appLogic.getCurrentProject();
-    if (clickedBtn.id === currentProject.id) return console.log('the same btn been clicked');
+    if (clickedBtn.id === currentProject.id) return;
     appLogic.setCurrentProjectId(clickedBtn.id);
     domInterface.renderTodoList();
 })
@@ -68,7 +68,7 @@ todoForm.addEventListener('submit', (e) => {
     const data = Object.fromEntries(formData.entries());
     const title = data.title;
     const desc = data.description;
-    const dueDate = data.dueDate;
+    const dueDate = parseISO(data["due-date"]);
     const priority = data.priority;
     appLogic.createNewTodo(title, desc, dueDate, priority);
     domInterface.renderTodoList();
@@ -84,3 +84,18 @@ cancelBtn.forEach((btn,i) => {
         todoDialog.close();
     })
 })
+//删除todo事件
+const todoContainer = document.querySelector('.todos-container');
+
+todoContainer.addEventListener('click', (e) => {
+    const todoId = e.target.dataset.todoId;
+    if (e.target.classList.contains('icon-btn')){
+        appLogic.deleteTodo(todoId);
+        domInterface.renderTodoList();
+    }
+    if (e.target.classList.contains('todo-checkbox')) {
+        appLogic.toggleCheckbox(todoId);
+        domInterface.renderTodoList();
+    }
+})
+//checked事件

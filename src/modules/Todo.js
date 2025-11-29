@@ -10,9 +10,10 @@ export default class Todo {
         description = '',
         dueDate = null,
         priority = 'low',
-        addedToProjectId = "Project-testing"
+        addedToProjectId = "Project-testing",
+        id = null
     }) {
-        this.#id = `todo-${Date.now()}-${Math.floor(Math.random()*1000)}`;
+        this.#id = id ? id : `todo-${Date.now()}-${Math.floor(Math.random()*1000)}`;
         this.title = title;
         this.description = description.trim();
         this.dueDate = dueDate;

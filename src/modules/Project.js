@@ -4,8 +4,8 @@ export default class Project {
     #title;
     #isDefault;
 
-    constructor(title) {
-        this.#id = `Project-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    constructor(title, id = null) {
+        this.#id = id ? id : `Project-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
         this.title = title;
         this.#todos = [];
         this.#isDefault = false;
@@ -35,7 +35,9 @@ export default class Project {
     toggleDefault() {
         this.#isDefault = !this.#isDefault;
     }
-
+    setIsDefault(val) {
+        this.#isDefault = val;
+    }
     addTodo(todoObj) {
         //是否验证todo有效性？
         this.#todos.push(todoObj);

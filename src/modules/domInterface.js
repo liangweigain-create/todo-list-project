@@ -1,4 +1,5 @@
 import * as appLogic from "./appLogic.js";
+import { isValid, parseISO, format, addDays, isBefore } from 'date-fns';
 
 export function renderProjectList() {
     const projectList = document.querySelector('.project-list');
@@ -35,7 +36,6 @@ export function renderProjectList() {
 export function renderTodoList() {
     const todoContainer = document.querySelector('#todos-container'); // Matches HTML ID
     todoContainer.innerHTML = '';
-    console.log('hahahaha')
     // Update the Big Header Title
     const currentProject = appLogic.getCurrentProject();
     const titleHeader = document.querySelector('#project-title');
@@ -43,12 +43,10 @@ export function renderTodoList() {
     
     if (!currentProject) throw new Error(`error! ${currentProject}`);
 
-    console.log('1')
     titleHeader.textContent = currentProject.title;
     countHeader.textContent = `${currentProject.todos.length} tasks remaining`;
 
     currentProject.todos.forEach(todo => {
-        console.log('2')
         const card = document.createElement('div');
         card.classList.add('todo-card'); // CSS: Main card style
         card.classList.add(`priority-${todo.priority}`); // CSS: Color border
@@ -57,6 +55,7 @@ export function renderTodoList() {
         if (todo.isCompleted) {
             card.classList.add('completed');
         }
+        else {card.classList.remove('completed')};
 
         // 1. Checkbox (Custom circle)
         const checkbox = document.createElement('input');
@@ -74,7 +73,7 @@ export function renderTodoList() {
         titleP.textContent = todo.title;
         titleP.classList.add('todo-title');
         const dateP = document.createElement('p');
-        dateP.textContent = todo.dueDate || 'No Date';
+        dateP.textContent = format(todo.dueDate,"MM月dd日yyyy年") || 'No Date';
         dateP.classList.add('todo-date');
         const descP = document.createElement('p');
         descP.textContent = todo.description;
@@ -96,6 +95,5 @@ export function renderTodoList() {
 
         todoContainer.appendChild(card);
     });
-    console.log('currentproject is gone')
 }
 

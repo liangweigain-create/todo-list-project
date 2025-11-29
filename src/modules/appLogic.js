@@ -8,15 +8,42 @@ let currentProjectId = null;
  * 如果数据库中有数据，应该读取数据并创建对应的todos 和projects
  */
 export function init() {
-    //后续学习如何从localstorage获取用户的本地数据
-    //获取数据后创建todos和projects的逻辑
-    //假设没有任何数据，代表用户第一次进入app，应该创建初始project供用户快速创建todos
-    if (projects.length === 0) {
-        //判断没有数据，则创建初始project-inbox
+    const savedProjects = localStorage.getItem('todoProjects');
+    const savedCurrentId = localStorage.getItem('currentProjectId');
+    
+    if (savedProjects) {
+        // 从本地存储恢复数据
+        const parsedProjects = JSON.parse(savedProjects);
+        projects = parsedProjects.map(projectData => {
+            const project = new Project(projectData.title, projectData.id);
+            project.setIsDefault(projectData.isDefault)
+            
+            // 恢复todos
+            projectData.todos.forEach(todoData => {
+                const todo = new Todo({
+                    id: todoData.id,
+                    title: todoData.title,
+                    description: todoData.description,
+                    dueDate: todoData.dueDate ? new Date(todoData.dueDate) : null,
+                    priority: todoData.priority,
+                    addedToProjectId: todoData.addedToProjectId
+                });
+                todo.isCompleted = todoData.isCompleted;
+                project.addTodo(todo);
+            });
+            return project;
+        });
+        
+        if (savedCurrentId) {
+            currentProjectId = savedCurrentId;
+        }
+    } else {
+        // 首次加载创建默认项目
         const inbox = new Project('Inbox');
         inbox.toggleDefault();
         projects.push(inbox);
         currentProjectId = inbox.id;
+        saveToLocalStorage(); // 保存初始数据
     }
 }
 
@@ -30,8 +57,8 @@ export function createNewProject(title) {
     const newProject = new Project(title);
     projects.push(newProject);
     currentProjectId = newProject.id;
-    console.log(`project ${newProject.title} created`);
     //保存数据。。
+    saveToLocalStorage();
     return newProject;
 }
 
@@ -43,6 +70,7 @@ export function deleteProject(projectId) {
     projects = projects.filter(project => project.id !== projectId);
     //如果当前项目正在被删除，切换当前项目id为默认inbox
     currentProjectId = currentProjectId === projectId ? projects.find(p => p.isDefault).id : currentProjectId;
+    saveToLocalStorage();
 }
 
 export function createNewTodo(title, description, dueDate, priority) {
@@ -58,9 +86,15 @@ export function createNewTodo(title, description, dueDate, priority) {
     })
 
     currentProject.addTodo(newTodo);
-    console.log(currentProject.todos);
     //保存数据。。。。
+    saveToLocalStorage();
     return newTodo;
+}
+export function deleteTodo(todoId) {
+    const currentProject = projects.find(p => p.id === currentProjectId);
+    if (!currentProject) throw new Error('currentProject not found');
+    currentProject.deleTodo(todoId);
+    saveToLocalStorage();
 }
 
 export function getCurrentProject() {
@@ -74,7 +108,38 @@ export function setCurrentProjectId(projectId) {
     const targetProject = projects.find(p => p.id === projectId);
     if (!targetProject) {throw new Error('targetProject not found!')};
     currentProjectId = targetProject.id;
+    saveToLocalStorage();
 }
 export function getAllProjects() {
     return projects;
+}
+
+//切换完成状态
+export function toggleCheckbox(todoId) {
+    const currentProject = projects.find(p => p.id === currentProjectId);
+    if (!currentProject) throw new Error('currentProject not found');
+    const targetTodo = currentProject.todos.find(todo => todo.id === todoId);
+    targetTodo.toggleCompleted();
+    saveToLocalStorage();
+}
+// 在appLogic.js中添加
+function saveToLocalStorage() {
+    // 由于类实例不能直接序列化，需要转换为普通对象
+    const serializedProjects = projects.map(project => ({
+        id: project.id,
+        title: project.title,
+        isDefault: project.isDefault,
+        todos: project.todos.map(todo => ({
+            id: todo.id,
+            title: todo.title,
+            description: todo.description,
+            dueDate: todo.dueDate ? todo.dueDate.toISOString() : null, // 日期序列化
+            priority: todo.priority,
+            isCompleted: todo.isCompleted,
+            addedToProjectId: todo.addedToProjectId
+        }))
+    }));
+    
+    localStorage.setItem('todoProjects', JSON.stringify(serializedProjects));
+    localStorage.setItem('currentProjectId', currentProjectId);
 }
