@@ -78,22 +78,22 @@
             
             <div class="form-group">
                 <label for="todo-title-input">Title</label>
-                <input type="text" id="todo-title-input" required placeholder="What needs to be done?">
+                <input type="text" id="todo-title-input" required placeholder="What needs to be done?" name="title">
             </div>
 
             <div class="form-group">
                 <label for="todo-desc-input">Description</label>
-                <textarea id="todo-desc-input" rows="3" placeholder="Details (optional)"></textarea>
+                <textarea id="todo-desc-input" rows="3" placeholder="Details (optional)" name="description"></textarea>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label for="todo-date-input">Due Date</label>
-                    <input type="date" id="todo-date-input">
+                    <input type="date" id="todo-date-input" name="due-date">
                 </div>
                 <div class="form-group">
                     <label for="todo-priority-input">Priority</label>
-                    <select id="todo-priority-input">
+                    <select id="todo-priority-input" name="priority">
                         <option value="low">Low</option>
                         <option value="medium" selected>Medium</option>
                         <option value="high">High</option>

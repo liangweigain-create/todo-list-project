@@ -204,11 +204,18 @@ body {
 .todo-content {
     flex: 1;
     margin-left: var(--spacing-md);
+    display: grid;
+    grid-template-columns: 80px 4fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: 
+        "title title"
+        "date description";
 }
 
-.todo-title { font-weight: 500; }
-.todo-date { font-size: 0.85rem; color: var(--clr-text-muted); }
-
+.todo-title { font-weight: 500; grid-area: title;}
+.todo-date, .todo-desc { font-size: 0.85rem; color: var(--clr-text-muted); }
+.todo-date {grid-area: date;}
+.todo-desc {grid-area: description;}
 /* --- Buttons --- */
 .btn {
     padding: 0.6em 1.2em;

@@ -58,13 +58,14 @@ export function createNewTodo(title, description, dueDate, priority) {
     })
 
     currentProject.addTodo(newTodo);
+    console.log(currentProject.todos);
     //保存数据。。。。
     return newTodo;
 }
 
 export function getCurrentProject() {
     if (!currentProjectId) {
-        throw new Error('currentProject not found');
+        throw new Error('currentProject buu not found');
     }
     return projects.find(p => p.id === currentProjectId);
 }
