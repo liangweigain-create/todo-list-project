@@ -22,8 +22,23 @@ sidebar.addEventListener('click', (e) => {
     const currentProject = appLogic.getCurrentProject();
     if (clickedBtn.id === currentProject.id) return;
     appLogic.setCurrentProjectId(clickedBtn.id);
+    updateProjectSelection()
     domInterface.renderTodoList();
 })
+// 同步项目按钮的选中状态
+function updateProjectSelection() {
+    const currentProjectId = appLogic.getCurrentProject().id;
+    // 获取所有动态生成的项目按钮
+    const allProjectBtns = document.querySelectorAll('li.active-project');
+    
+    allProjectBtns.forEach(btn => {
+        if (btn.id === currentProjectId) {
+            btn.classList.add('selected');
+        } else {
+            btn.classList.remove('selected');
+        }
+    });
+}
 //添加新增项目按钮点击事件
 addBtn.addEventListener('click', () => {
     projectDialog.showModal();
